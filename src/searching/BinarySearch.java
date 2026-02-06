@@ -36,5 +36,19 @@ public class BinarySearch {
         return mid - 1;
     }
 
+    private static int binarySearchHelper(int[] array, int target, int left, int right ) {
+        if(left > right) {
+            return -1;
+        }
+        int mid = getMid(left, right);
+        if(array[mid] == target) {
+            return mid;
+        }else if(array[mid] < target) {
+            return binarySearchHelper(array, target, mid+1, right);
+        }else  {
+            return binarySearchHelper(array, target, left, mid-1);
+        }
+    }
+
 
 }
