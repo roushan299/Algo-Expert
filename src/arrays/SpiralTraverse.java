@@ -3,7 +3,7 @@ package arrays;
 import java.util.ArrayList;
 import java.util.List;
 
-public class spiralTraverse {
+public class SpiralTraverse {
     public static List<Integer> spiralTraverse(int[][] array) {
         List<Integer> result = new ArrayList<>();
 
