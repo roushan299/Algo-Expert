@@ -18,17 +18,27 @@ public class SubArraySort {
         if(minOutOfOrder == Integer.MAX_VALUE){
             return result;
         }
+        int left = findLeftBoundary(array, minOutOfOrder);
+        int right = findRightBoundary(array, maxOutOfOrder);
 
-        int subArrayLeftIdx = 0;
-        int subArrayRightIdx = array.length - 1;
-        while (minOutOfOrder >= array[subArrayLeftIdx]){
-            subArrayLeftIdx++;
-        }
-        while (maxOutOfOrder <= array[subArrayRightIdx]){
-            subArrayRightIdx--;
-        }
-        return new int[]{subArrayLeftIdx, subArrayRightIdx};
+        return new int[]{left, right};
 
+    }
+
+    private static int findRightBoundary(int[] array, int maxOutOfOrder) {
+            int right = array.length - 1;
+            while(right >= 0 && array[right] >= maxOutOfOrder){
+                right--;
+            }
+            return right;
+    }
+
+    private static int findLeftBoundary(int[] array, int minOutOfOrder) {
+        int left = 0;
+        while (left < array.length && minOutOfOrder >= array[left]){
+            left++;
+        }
+        return left;
     }
 
     private static boolean isOutOfOrder(int index, int num, int[] array) {
