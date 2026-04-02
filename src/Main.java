@@ -8,7 +8,9 @@ public class Main {
         printLine();
         int serialNo = 1;
         String currentPackage = "";
-        String srcPath = "C:\\Users\\roush\\Downloads\\Algo-Expert\\src";
+        String currentDir = System.getProperty("user.dir"); // gets current working directory
+        String srcPath = currentDir + File.separator + "src";
+        //String srcPath = "C:\\Users\\roush\\Downloads\\Algo-Expert\\src";
         Queue<File> queue = new LinkedList<>();
         File root = new File(srcPath);
         File[] files = root.listFiles();
