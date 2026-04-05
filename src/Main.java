@@ -5,6 +5,7 @@ import java.util.Queue;
 public class Main {
 
     public static void main(String[] args) {
+        System.out.println();
         printLine();
         int serialNo = 1;
         String currentPackage = "";
@@ -39,6 +40,10 @@ public class Main {
 
                 // Print row
                 printRow(serialNo, currentFile.getName(), packageName);
+                if(packageName.isEmpty()){
+                    printLine();
+                    System.out.println();
+                }
                 serialNo++;
                 currentPackage = packageName;
             }
