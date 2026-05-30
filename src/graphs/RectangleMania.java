@@ -1,7 +1,6 @@
 package graphs;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class RectangleMania {
 
@@ -47,31 +46,31 @@ public class RectangleMania {
             return this.x == point.x && this.y == point.y;
         }
     }
-
-    public static int rectangleMania(List<Integer[]> coordinates) {
-        Point[] points = Point.getPointList(coordinates);
-        HashSet<Point> pointSet = getPointSet(points);
-        int rectangleCount = 0;
-
-        for(int index1 = 0; index1 < points.length; index1++){
-            Point diagonalStart = points[index1];
-
-            for(int index2 = index1+1; index2 < points.length; index2++){
-                Point diagonalEnd = points[index2];
-
-                // diagonal points
-                if(diagonalStart.isDiagonal(diagonalEnd)){
-
-                    if(pointSet.contains(new Point(diagonalStart.x, diagonalEnd.y)) &&
-                            pointSet.contains(new Point(diagonalEnd.x,  diagonalStart.y))){
-                        rectangleCount++;
-                    }
-                }
-            }
-        }
-
-        return rectangleCount/2;
-    }
+//    solution using set
+//    public static int rectangleMania(List<Integer[]> coordinates) {
+//        Point[] points = Point.getPointList(coordinates);
+//        HashSet<Point> pointSet = getPointSet(points);
+//        int rectangleCount = 0;
+//
+//        for(int index1 = 0; index1 < points.length; index1++){
+//            Point diagonalStart = points[index1];
+//
+//            for(int index2 = index1+1; index2 < points.length; index2++){
+//                Point diagonalEnd = points[index2];
+//
+//                // diagonal points
+//                if(diagonalStart.isDiagonal(diagonalEnd)){
+//
+//                    if(pointSet.contains(new Point(diagonalStart.x, diagonalEnd.y)) &&
+//                            pointSet.contains(new Point(diagonalEnd.x,  diagonalStart.y))){
+//                        rectangleCount++;
+//                    }
+//                }
+//            }
+//        }
+//
+//        return rectangleCount/2;
+//    }
 
     private static HashSet<Point> getPointSet(Point[] points) {
         HashSet<Point> pointSet = new HashSet<>();
@@ -79,6 +78,56 @@ public class RectangleMania {
             pointSet.add(points[i]);
         }
         return pointSet;
+    }
+
+
+    // solution using graph
+    public static int rectangleMania(List<Integer[]> coordinates) {
+        Point[] points = Point.getPointList(coordinates);
+        HashSet<Point> pointSet = getPointSet(points);
+        HashMap<Point, List<Point>> upwardGraph = buildUpWardGraph(points);
+
+        int rectangleCount = 0;
+
+        for(Point point : points){
+            rectangleCount += countRectangle(point, upwardGraph, pointSet);
+        }
+        return rectangleCount;
+    }
+
+
+    private static HashMap<Point, List<Point>> buildUpWardGraph(Point[] points) {
+        HashMap<Point, List<Point>> upwardGraph = new HashMap<>();
+
+        for(Point point1 : points){
+            List<Point> upwardNeighbours = new ArrayList<>();
+
+            for(Point point2 : points){
+
+                if(point1.x == point2.x && point2.y  > point1.y){
+                    upwardNeighbours.add(point2);
+                }
+            }
+            upwardGraph.put(point1, upwardNeighbours);
+        }
+        return upwardGraph;
+    }
+
+    private static int countRectangle(Point bottomLeft, HashMap<Point, List<Point>> upwardGraph, HashSet<Point> pointSet) {
+        int count = 0;
+        List<Point> upWardPointList = upwardGraph.getOrDefault(bottomLeft, Collections.emptyList());
+
+        for(Point topLeft:  upWardPointList){
+            for(Point topRight: upwardGraph.keySet()){
+
+                if(topRight.y != topLeft.y) continue;
+                if(topRight.x <= topLeft.x) continue;
+
+                Point bottomRight = new Point(topRight.x, bottomLeft.y);
+                if(pointSet.contains(bottomRight)) count++;
+            }
+        }
+        return count;
     }
 
 }
